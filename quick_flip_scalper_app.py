@@ -503,6 +503,7 @@ def results_to_dataframe(results: List[SignalResult]) -> pd.DataFrame:
                 "Entry": round(r.entry, 4) if r.entry is not None else None,
                 "Stop Loss": round(r.stop_loss, 4) if r.stop_loss is not None else None,
                 "Target": round(r.target, 4) if r.target is not None else None,
+                "Potential % Gain": round(((abs(r.target - r.entry) / r.entry) * 100), 2) if r.target is not None and r.entry not in (None, 0) else None,
                 "Status": r.status,
                 "Success": r.success,
             }
@@ -556,7 +557,7 @@ def run_backtest_polygon(api_key: str, ticker: str, start_date: date, end_date: 
 # SIDEBAR
 # =========================================================
 st.sidebar.title("Quick Flip Scalper")
-
+st.sidebar.caption("API keys loaded from secrets/env")
 
 page_mode = st.sidebar.radio("Page", ["Live Scanner", "Historical Backtesting"])
 provider = st.sidebar.selectbox("Primary Data Provider", ["Polygon"], index=0)
@@ -565,7 +566,7 @@ polygon_api_key = st.secrets.get("POLYGON_API_KEY", os.getenv("POLYGON_API_KEY",
 alpaca_api_key = st.secrets.get("ALPACA_API_KEY", os.getenv("ALPACA_API_KEY", ""))
 alpaca_secret_key = st.secrets.get("ALPACA_SECRET_KEY", os.getenv("ALPACA_SECRET_KEY", ""))
 
-
+st.sidebar.caption("API keys loaded from secrets/env")
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
@@ -584,7 +585,9 @@ st.sidebar.markdown(
 # HEADER
 # =========================================================
 st.title("📈 Quick Flip Scalper")
-
+st.write(
+    "This version uses real market data for 5-minute bars and ATR(14) calculations when a Polygon API key is supplied. TradingView remains available for visual hotlists, and Alpaca can supply dynamic market-mover symbol lists."
+)
 
 c1, c2, c3, c4 = st.columns(4)
 with c1:
@@ -708,10 +711,12 @@ if page_mode == "Live Scanner":
                     d3.metric("Opening Range", f"{chosen.opening_range:.2f}")
                     d4.metric("Liquidity", f"{chosen.liquidity_pct:.1f}%", chosen.liquidity_grade)
 
-                    d5, d6, d7 = st.columns(3)
+                    d5, d6, d7, d8 = st.columns(4)
                     d5.metric("Entry", format_money(chosen.entry))
                     d6.metric("Stop Loss", format_money(chosen.stop_loss))
                     d7.metric("Target", format_money(chosen.target))
+                    potential_gain = ((abs(chosen.target - chosen.entry) / chosen.entry) * 100) if chosen.target is not None and chosen.entry not in (None, 0) else None
+                    d8.metric("Potential % Gain", f"{potential_gain:.2f}%" if potential_gain is not None else "—")
 
                     try:
                         intraday = fetch_polygon_intraday_5m_data(polygon_api_key, chosen.ticker, chosen.trading_day)
