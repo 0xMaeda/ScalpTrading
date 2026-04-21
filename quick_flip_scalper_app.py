@@ -683,10 +683,13 @@ if page_mode == "Live Scanner":
                 setup_count = int((df["Status"] == "setup_found").sum())
                 pass_count = int(df["Passed Liquidity"].sum())
 
-                m1, m2, m3 = st.columns(3)
+                m1, m2, m3, m4 = st.columns(4)
                 m1.metric("Tickers Scanned", total)
                 m2.metric("Liquidity Passes", pass_count)
                 m3.metric("Setups Found", setup_count)
+                success_count = int((df["Success"] == True).sum()) if "Success" in df.columns else 0
+                success_pct = (success_count / setup_count * 100) if setup_count > 0 else 0
+                m4.metric("Setup Success %", f"{success_pct:.1f}%")
 
                 selection_event = st.dataframe(
                     df,
