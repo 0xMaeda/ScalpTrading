@@ -630,10 +630,8 @@ if page_mode == "Live Scanner":
             else:
                 st.warning("Add Alpaca API credentials in the sidebar to load a real most-active list.")
         else:
-                st.warning("Add Alpaca API credentials in the sidebar to load real gainers/losers.")
-        else:
             hotlist_html = fetch_tradingview_hotlist_iframe("dark")
-            st.caption("TradingView hotlist is shown on the right for review. To auto-scan dynamic lists, use Alpaca Most Active or Alpaca Movers.")
+
 
         if tickers:
             st.caption(f"Loaded {len(tickers)} symbols")
