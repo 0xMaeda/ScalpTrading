@@ -557,16 +557,14 @@ def run_backtest_polygon(api_key: str, ticker: str, start_date: date, end_date: 
 # SIDEBAR
 # =========================================================
 st.sidebar.title("Quick Flip Scalper")
-st.sidebar.caption("API keys loaded from secrets/env")
 
 page_mode = st.sidebar.radio("Page", ["Live Scanner", "Historical Backtesting"])
-provider = st.sidebar.selectbox("Primary Data Provider", ["Polygon"], index=0)
+provider = st.sidebar.selectbox("
 # Load API keys securely from Streamlit secrets (preferred) or environment variables
 polygon_api_key = st.secrets.get("POLYGON_API_KEY", os.getenv("POLYGON_API_KEY", ""))
 alpaca_api_key = st.secrets.get("ALPACA_API_KEY", os.getenv("ALPACA_API_KEY", ""))
 alpaca_secret_key = st.secrets.get("ALPACA_SECRET_KEY", os.getenv("ALPACA_SECRET_KEY", ""))
 
-st.sidebar.caption("API keys loaded from secrets/env")
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
@@ -586,7 +584,7 @@ st.sidebar.markdown(
 # =========================================================
 st.title("📈 Quick Flip Scalper")
 st.write(
-    "This version uses real market data for 5-minute bars and ATR(14) calculations when a Polygon API key is supplied. TradingView remains available for visual hotlists, and Alpaca can supply dynamic market-mover symbol lists."
+    ""
 )
 
 c1, c2, c3, c4 = st.columns(4)
@@ -610,7 +608,7 @@ if page_mode == "Live Scanner":
         st.subheader("Scanner Inputs")
         ticker_source = st.radio(
             "Ticker Source",
-            ["Manual Entry", "Alpaca Most Active", "Alpaca Movers", "TradingView Hotlist"],
+            ["Manual Entry", "Alpaca Most Active", "TradingView Hotlist"],
             index=0,
         )
         trading_day = st.date_input("Trading Day", value=date.today())
@@ -631,16 +629,7 @@ if page_mode == "Live Scanner":
                     st.error(f"Unable to load Alpaca most-active list: {exc}")
             else:
                 st.warning("Add Alpaca API credentials in the sidebar to load a real most-active list.")
-        elif ticker_source == "Alpaca Movers":
-            mover_group = st.selectbox("Mover list", ["Gainers", "Losers"], index=0)
-            top_n = st.slider("How many movers", min_value=1, max_value=50, value=20)
-            if alpaca_api_key and alpaca_secret_key:
-                try:
-                    gainers, losers = fetch_alpaca_movers(alpaca_api_key, alpaca_secret_key)
-                    tickers = (gainers if mover_group == "Gainers" else losers)[:top_n]
-                except Exception as exc:
-                    st.error(f"Unable to load Alpaca movers: {exc}")
-            else:
+        else:
                 st.warning("Add Alpaca API credentials in the sidebar to load real gainers/losers.")
         else:
             hotlist_html = fetch_tradingview_hotlist_iframe("dark")
