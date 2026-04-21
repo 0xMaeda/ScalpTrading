@@ -672,6 +672,7 @@ if page_mode == "Live Scanner":
                     st.session_state.live_results = []
 
             results: List[SignalResult] = st.session_state.get("live_results", [])
+            results = [r for r in results if r.passed_liquidity]
             df = results_to_dataframe(results)
 
             if df.empty:
@@ -722,16 +723,14 @@ if page_mode == "Live Scanner":
                         st.error(f"Unable to render chart: {exc}")
 
                     st.markdown("### Rule Check")
-                    st.markdown("### Rule Check")
-
-                    rule_text = "\n".join([
+                    rule_text = "
+".join([
                         f"- First 15-minute candle direction: **{chosen.direction}**",
                         f"- Opening range box: **{chosen.box_bottom:.2f} to {chosen.box_top:.2f}**",
                         f"- Liquidity: **{chosen.liquidity_pct:.1f}% of ATR14** ({chosen.liquidity_grade})",
                         f"- Reversal detected: **{chosen.reversal_type or 'None'}**",
-                        f"- Status: **{chosen.status}**"
+                        f"- Status: **{chosen.status}**",
                     ])
-
                     st.markdown(rule_text)
 
 # =========================================================
@@ -783,6 +782,7 @@ else:
                 st.session_state.backtest_results = []
 
         results: List[SignalResult] = st.session_state.get("backtest_results", [])
+        results = [r for r in results if r.passed_liquidity]
         df = results_to_dataframe(results)
 
         if df.empty:
