@@ -723,8 +723,7 @@ if page_mode == "Live Scanner":
                         st.error(f"Unable to render chart: {exc}")
 
                     st.markdown("### Rule Check")
-                    rule_text = "
-".join([
+                    rule_text = "\n".join([
                         f"- First 15-minute candle direction: **{chosen.direction}**",
                         f"- Opening range box: **{chosen.box_bottom:.2f} to {chosen.box_top:.2f}**",
                         f"- Liquidity: **{chosen.liquidity_pct:.1f}% of ATR14** ({chosen.liquidity_grade})",
