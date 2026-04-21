@@ -556,7 +556,7 @@ def run_backtest_polygon(api_key: str, ticker: str, start_date: date, end_date: 
 # SIDEBAR
 # =========================================================
 st.sidebar.title("Quick Flip Scalper")
-st.sidebar.caption("API keys loaded from secrets/env")
+
 
 page_mode = st.sidebar.radio("Page", ["Live Scanner", "Historical Backtesting"])
 provider = st.sidebar.selectbox("Primary Data Provider", ["Polygon"], index=0)
@@ -565,7 +565,7 @@ polygon_api_key = st.secrets.get("POLYGON_API_KEY", os.getenv("POLYGON_API_KEY",
 alpaca_api_key = st.secrets.get("ALPACA_API_KEY", os.getenv("ALPACA_API_KEY", ""))
 alpaca_secret_key = st.secrets.get("ALPACA_SECRET_KEY", os.getenv("ALPACA_SECRET_KEY", ""))
 
-st.sidebar.caption("API keys loaded from secrets/env")
+
 st.sidebar.markdown("---")
 st.sidebar.markdown(
     """
@@ -584,9 +584,7 @@ st.sidebar.markdown(
 # HEADER
 # =========================================================
 st.title("📈 Quick Flip Scalper")
-st.write(
-    "This version uses real market data for 5-minute bars and ATR(14) calculations when a Polygon API key is supplied. TradingView remains available for visual hotlists, and Alpaca can supply dynamic market-mover symbol lists."
-)
+
 
 c1, c2, c3, c4 = st.columns(4)
 with c1:
