@@ -559,7 +559,7 @@ def run_backtest_polygon(api_key: str, ticker: str, start_date: date, end_date: 
 st.sidebar.title("Quick Flip Scalper")
 
 page_mode = st.sidebar.radio("Page", ["Live Scanner", "Historical Backtesting"])
-
+provider = st.sidebar.selectbox("
 # Load API keys securely from Streamlit secrets (preferred) or environment variables
 polygon_api_key = st.secrets.get("POLYGON_API_KEY", os.getenv("POLYGON_API_KEY", ""))
 alpaca_api_key = st.secrets.get("ALPACA_API_KEY", os.getenv("ALPACA_API_KEY", ""))
@@ -620,7 +620,7 @@ if page_mode == "Live Scanner":
             raw_tickers = st.text_area("Tickers", value="AAPL, NVDA, TSLA, AMD", height=100)
             tickers = parse_ticker_list(raw_tickers)
         elif ticker_source == "Alpaca Most Active":
-            top_n = st.slider("How many most-active tickers", min_value=1, max_value=100, value=25)
+            top_n = st.slider("How many most-active tickers", min_value=1, max_value=1000, value=25)
             rank_by = st.selectbox("Rank by", ["volume", "trades"], index=0)
             if alpaca_api_key and alpaca_secret_key:
                 try:
@@ -631,7 +631,6 @@ if page_mode == "Live Scanner":
                 st.warning("Add Alpaca API credentials in the sidebar to load a real most-active list.")
         else:
             hotlist_html = fetch_tradingview_hotlist_iframe("dark")
-
 
         if tickers:
             st.caption(f"Loaded {len(tickers)} symbols")
