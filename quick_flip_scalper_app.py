@@ -559,7 +559,6 @@ def run_backtest_polygon(api_key: str, ticker: str, start_date: date, end_date: 
 st.sidebar.title("Quick Flip Scalper")
 
 page_mode = st.sidebar.radio("Page", ["Live Scanner", "Historical Backtesting"])
-provider = st.sidebar.selectbox("
 # Load API keys securely from Streamlit secrets (preferred) or environment variables
 polygon_api_key = st.secrets.get("POLYGON_API_KEY", os.getenv("POLYGON_API_KEY", ""))
 alpaca_api_key = st.secrets.get("ALPACA_API_KEY", os.getenv("ALPACA_API_KEY", ""))
